@@ -66,7 +66,9 @@ class match_block(nn.Module):
             nn.Conv2d(self.inter_channels * 2, 1, 1, 1, 0, bias=False),
             nn.ReLU()
         )
-        
+
+
+        # co excitation
         self.ChannelGate = ChannelGate(self.in_channels)
         self.globalAvgPool = nn.AdaptiveAvgPool2d(1)
 
@@ -121,6 +123,10 @@ class match_block(nn.Module):
         c_weight = self.ChannelGate(non_aim)
         act_aim = non_aim * c_weight
         act_det = non_det * c_weight
+
+        # NONdet: non-local features
+        # act det: target image
+        # act aim: query image
 
         return non_det, act_det, act_aim, c_weight
 
@@ -190,15 +196,15 @@ class _fasterRCNN(nn.Module):
 
         rois = Variable(rois)
         # do roi pooling based on predicted rois
-        if cfg.POOLING_MODE == 'align':
+        if cfg.POOLING_MODE == 'align':# Roi Align
             pooled_feat = self.RCNN_roi_align(act_feat, rois.view(-1, 5))
-        elif cfg.POOLING_MODE == 'pool':
+        elif cfg.POOLING_MODE == 'pool': # Roi pooling  -> doc faster
             pooled_feat = self.RCNN_roi_pool(act_feat, rois.view(-1,5))
 
 
         # feed pooled features to top model
-        pooled_feat = self._head_to_tail(pooled_feat)
-        query_feat  = self._head_to_tail(act_aim)
+        pooled_feat = self._head_to_tail(pooled_feat) # nn 2 lop -> vector
+        query_feat  = self._head_to_tail(act_aim)  # nn 2 lop -> vector
 
         # compute bbox offset
         bbox_pred = self.RCNN_bbox_pred(pooled_feat)

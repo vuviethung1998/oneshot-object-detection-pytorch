@@ -11,7 +11,8 @@ import PIL
 import pdb
 
 def prepare_roidb(imdb):
-  """Enrich the imdb's roidb by adding some derived quantities that
+  """
+  Enrich the imdb's roidb by adding some derived quantities that
   are useful for training. This function precomputes the maximum
   overlap, taken over ground-truth boxes, between each ROI and
   each ground-truth box. The class with maximum overlap is also
@@ -144,7 +145,7 @@ def combined_roidb(imdb_names, training=True, seen=1):
     return imdb.roidb
   
   def get_roidb(imdb_name, training):
-    imdb = get_imdb(imdb_name)
+    imdb = get_imdb(imdb_name) # get image database by name
     
     print('Loaded dataset `{:s}` for training'.format(imdb.name))
     imdb.set_proposal_method(cfg.TRAIN.PROPOSAL_METHOD)

@@ -151,7 +151,6 @@ class sampler(Sampler):
     return self.num_data
 
 if __name__ == '__main__':
-
   args = parse_args()
   val = False
 

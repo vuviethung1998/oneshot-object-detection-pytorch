@@ -153,18 +153,22 @@ class coco(imdb):
     Return the database of ground-truth regions of interest.
     This function loads/saves from/to a cache file to speed up future calls.
     """
+
+    # tao file cache
     cache_file = osp.join(self.cache_path, self.name + '_gt_roidb.pkl')
-    
+
+    # neu ton tai cache file roi thi doc va tra ve roidb
     if osp.exists(cache_file):
       with open(cache_file, 'rb') as fid:
         [roidb, self.cat_data] = pickle.load(fid)
       print('{} gt roidb loaded from {}'.format(self.name, cache_file))
       return roidb
     
-
+    # neu khong thi load coco annotation va tao gt_roidb
     gt_roidb = [self._load_coco_annotation(index)
                 for index in self._image_index]
 
+    #luu file cache
     with open(cache_file, 'wb') as fid:
       pickle.dump([gt_roidb,self.cat_data], fid, pickle.HIGHEST_PROTOCOL)
     print('wrote gt roidb to {}'.format(cache_file))

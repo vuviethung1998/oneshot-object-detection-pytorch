@@ -15,7 +15,24 @@ import time
 import cv2
 import torch
 from torch.autograd import Variable
+import torch.nn from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+import pandas as pd
+
+import _init_paths
+import os
+import sys
+import numpy as np
+import argparse
+import pprint
+import pdb
+import time
+import cv2
+import torch
+from torch.autograd import Variable
 import torch.nn as nn
+as nn
 import torch.optim as optim
 import pickle
 from roi_data_layer.roidb import combined_roidb
@@ -177,7 +194,7 @@ if __name__ == '__main__':
   dataset_vu = roibatchLoader(roidb_vu, ratio_list_vu, ratio_index_vu, query_vu, 1, imdb_vu.num_classes, training=False, seen=args.seen)
 
 
-  
+
   # initilize the network here.
   if args.net == 'vgg16':
     fasterRCNN = vgg16(imdb_vu.classes, pretrained=False, class_agnostic=args.class_agnostic)
@@ -229,11 +246,11 @@ if __name__ == '__main__':
   im_info = Variable(im_info)
   catgory = Variable(catgory)
   gt_boxes = Variable(gt_boxes)
-    
+
   # record time
   start = time.time()
 
-  # visiualization
+  # visualization
   vis = args.vis
   if vis:
     thresh = 0.05
@@ -258,7 +275,7 @@ if __name__ == '__main__':
     all_boxes = [[[] for _ in xrange(num_images_vu)]
                 for _ in xrange(imdb_vu.num_classes)]
 
-    
+
     _t = {'im_detect': time.time(), 'misc': time.time()}
     if args.group != 0:
       det_file = os.path.join(output_dir_vu, 'sess%d_g%d_seen%d_%d.pkl'%(args.checksession, args.group, args.seen, avg))
@@ -279,7 +296,6 @@ if __name__ == '__main__':
           gt_boxes.resize_(data[3].size()).copy_(data[3])
           catgory.resize_(data[4].size()).copy_(data[4])
 
-
         # Run Testing
         det_tic = time.time()
         rois, cls_prob, bbox_pred, \
@@ -287,12 +303,10 @@ if __name__ == '__main__':
         RCNN_loss_cls, _, RCNN_loss_bbox, \
         rois_label, weight = fasterRCNN(im_data, query, im_info, gt_boxes, catgory)
 
-
         scores = cls_prob.data
         boxes = rois.data[:, :, 1:5]
 
-        
-        # Apply bounding-box regression 
+        # Apply bounding-box regression
         if cfg.TEST.BBOX_REG:
             # Apply bounding-box regression deltas
             box_deltas = bbox_pred.data
@@ -349,7 +363,6 @@ if __name__ == '__main__':
             image_scores = all_boxes[catgory][index][:,-1]
             if len(image_scores) > max_per_image:
                 image_thresh = np.sort(image_scores)[-max_per_image]
-
                 keep = np.where(all_boxes[catgory][index][:,-1] >= image_thresh)[0]
                 all_boxes[catgory][index] = all_boxes[catgory][index][keep, :]
           except:
@@ -377,15 +390,14 @@ if __name__ == '__main__':
           o_query = cv2.resize(o_query, (h, h),interpolation=cv2.INTER_LINEAR)
           im2show = np.concatenate((im2show, o_query), axis=1)
 
-          cv2.imwrite('./test_img/%d_d.png'%(i), im2show)
-      
-    
+          cv2.imwrite('/home/content/data/test_img/%d_d.png'%(i), im2show)
+
+
       with open(det_file, 'wb') as f:
           pickle.dump(all_boxes, f, pickle.HIGHEST_PROTOCOL)
-      
-    print('Evaluating detections')
-    imdb_vu.evaluate_detections(all_boxes, output_dir_vu) 
 
+    print('Evaluating detections')
+    imdb_vu.evaluate_detections(all_boxes, output_dir_vu)
 
     end = time.time()
     print("test time: %0.4fs" % (end - start))
