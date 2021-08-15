@@ -124,7 +124,7 @@ def test_rank_roidb_ratio(roidb, reserved):
 
     return ratio_list, ratio_index
 
-def combined_roidb(imdb_names, training=True, seen=1):
+def combined_roidb(imdb_names, training=True, seen=1): # vao ham nay(4) - 6
   """
   Combine multiple roidbs
   """
@@ -144,7 +144,7 @@ def combined_roidb(imdb_names, training=True, seen=1):
 
     return imdb.roidb
   
-  def get_roidb(imdb_name, training):
+  def get_roidb(imdb_name, training): # vao ham nay(3)
     imdb = get_imdb(imdb_name) # get image database by name
     
     print('Loaded dataset `{:s}` for training'.format(imdb.name))

@@ -205,7 +205,7 @@ if __name__ == '__main__':
     cfg.POOLING_MODE = checkpoint['pooling_mode']
 
   # initilize the tensor holder here.
-  print('load model successfully!')
+  print('load model successfully!') # vao day (7)
   im_data = torch.FloatTensor(1)
   query   = torch.FloatTensor(1)
   im_info = torch.FloatTensor(1)
@@ -372,13 +372,13 @@ if __name__ == '__main__':
           o_query = cv2.resize(o_query, (h, h),interpolation=cv2.INTER_LINEAR)
           im2show = np.concatenate((im2show, o_query), axis=1)
 
-          cv2.imwrite('/home/content/data/test_img/%d_d.png'%(i), im2show)
+          cv2.imwrite('/content/data/test_img/%d_d.png'%(i), im2show)
 
 
       with open(det_file, 'wb') as f:
           pickle.dump(all_boxes, f, pickle.HIGHEST_PROTOCOL)
 
-    print('Evaluating detections')
+    print('Evaluating detections') # vao day (8)
     imdb_vu.evaluate_detections(all_boxes, output_dir_vu)
 
     end = time.time()

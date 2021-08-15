@@ -65,7 +65,7 @@ except NameError:
     unicode = str  # Python 3
     
 class COCO:
-    def __init__(self, annotation_file=None):
+    def __init__(self, annotation_file=None): # vao ham nay (1)
         """
         Constructor of Microsoft COCO helper class for reading and visualizing annotations.
         :param annotation_file (str): location of annotation file
@@ -87,7 +87,7 @@ class COCO:
             self.dataset = dataset
             self.createIndex()
 
-    def createIndex(self):
+    def createIndex(self): # vao ham nay (2)
         # create index
         print('creating index...')
         anns = {}
