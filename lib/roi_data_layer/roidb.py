@@ -136,7 +136,6 @@ def combined_roidb(imdb_names, training=True, seen=1): # vao ham nay(4) - 6
       imdb.append_flipped_images()
       print('done')
 
-
     print('Preparing training data...')
     prepare_roidb(imdb)
     #ratio_index = rank_roidb_ratio(imdb)
@@ -154,9 +153,6 @@ def combined_roidb(imdb_names, training=True, seen=1): # vao ham nay(4) - 6
     imdb.filter(seen)
 
     roidb = get_training_roidb(imdb, training)
-
-
-
     return imdb, roidb, imdb.cat_data, imdb.inverse_list
 
   imdbs = []

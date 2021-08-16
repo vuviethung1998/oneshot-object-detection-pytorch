@@ -74,18 +74,18 @@ class COCO:
         """
         # load dataset
         self.dataset = {}
-        self.anns = []
-        self.imgToAnns = {}
-        self.catToImgs = {}
+        self.anns = [] # annotations
+        self.imgToAnns = {} # image to annotations
+        self.catToImgs = {} # category to images
         self.imgs = {}
         self.cats = {}
-        if not annotation_file == None:
+        if not annotation_file == None: # neu ton tai annotation file
             print('loading annotations into memory...')
             tic = time.time()
-            dataset = json.load(open(annotation_file, 'r'))
+            dataset = json.load(open(annotation_file, 'r')) #  tao dataset
             print('Done (t=%0.2fs)'%(time.time()- tic))
             self.dataset = dataset
-            self.createIndex()
+            self.createIndex() # tao index cho dataset
 
     def createIndex(self): # vao ham nay (2)
         # create index
@@ -95,12 +95,12 @@ class COCO:
         catToImgs = {}
         cats = {}
         imgs = {}
-        if 'annotations' in self.dataset:
-            imgToAnns = {ann['image_id']: [] for ann in self.dataset['annotations']}
-            anns =      {ann['id']:       [] for ann in self.dataset['annotations']}
+        if 'annotations' in self.dataset: # neu trong dataset co key annotation
+            imgToAnns = {ann['image_id']: [] for ann in self.dataset['annotations']} # khoi tao
+            anns =      {ann['id']:       [] for ann in self.dataset['annotations']} # khoi tao
             for ann in self.dataset['annotations']:
-                imgToAnns[ann['image_id']] += [ann]
-                anns[ann['id']] = ann
+                imgToAnns[ann['image_id']] += [ann] # them annotation vao danh sach cua image_id
+                anns[ann['id']] = ann # them ann vao list ann_id
 
         if 'images' in self.dataset:
             imgs      = {im['id']: {} for im in self.dataset['images']}

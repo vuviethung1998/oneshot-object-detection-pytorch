@@ -148,7 +148,7 @@ class coco(imdb):
       'Path does not exist: {}'.format(image_path)
     return image_path
 
-  def gt_roidb(self): vao ham nay (5)
+  def gt_roidb(self): #vao ham nay (5)
     """
     Return the database of ground-truth regions of interest.
     This function loads/saves from/to a cache file to speed up future calls.
