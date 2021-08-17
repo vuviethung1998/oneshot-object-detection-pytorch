@@ -83,6 +83,7 @@ class COCO:
             print('loading annotations into memory...')
             tic = time.time()
             dataset = json.load(open(annotation_file, 'r')) #  tao dataset
+
             print('Done (t=%0.2fs)'%(time.time()- tic))
             self.dataset = dataset
             self.createIndex() # tao index cho dataset
@@ -178,10 +179,16 @@ class COCO:
             cats = self.dataset['categories']
         else:
             cats = self.dataset['categories']
+            print('cat-initial: {}'.format(cats))
             cats = cats if len(catNms) == 0 else [cat for cat in cats if cat['name']          in catNms]
+            print('cat-name: {}'.format(cats))
             cats = cats if len(supNms) == 0 else [cat for cat in cats if cat['supercategory'] in supNms]
+            print('cat-supercategory: {}'.format(cats))
             cats = cats if len(catIds) == 0 else [cat for cat in cats if cat['id']            in catIds]
+            print('cat-id: {}'.format(cats))
+
         ids = [cat['id'] for cat in cats]
+        print('ids: {}'.format(ids))
         return ids
 
     def getImgIds(self, imgIds=[], catIds=[]):
