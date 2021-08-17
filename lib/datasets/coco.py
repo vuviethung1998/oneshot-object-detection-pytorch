@@ -201,14 +201,15 @@ class coco(imdb):
       if obj['area'] > 0 and x2 >= x1 and y2 >= y1:
         obj['clean_bbox'] = [x1, y1, x2, y2]
         valid_objs.append(obj)
-      
-        if i in save_seq:
-          entry = {
-               'boxes': obj['clean_bbox'],
-               'image_path': im_path
-               }
+
+        # bỏ qua điều kiện chỉ lấy những box được bao quanh bởi bounding box của MaskRCNN
+        # if i in save_seq:
+        entry = {
+           'boxes': obj['clean_bbox'],
+           'image_path': im_path
+           }
           
-          self.cat_data[self.coco_cat_id_to_class_ind[obj['category_id']]].append(entry)
+        self.cat_data[self.coco_cat_id_to_class_ind[obj['category_id']]].append(entry)
       
     objs = valid_objs
     num_objs = len(objs)
