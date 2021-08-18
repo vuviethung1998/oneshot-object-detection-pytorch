@@ -91,14 +91,14 @@ class coco(imdb):
     self._gt_splits = ('train', 'val', 'minival')
 
     # set reference file
-    self._reference_dir  = os.path.join(cfg.DATA_DIR, "coco_reference_image")
-    self._reference_file = os.path.join(self._reference_dir, "coco_{}_e2e_mask_rcnn_R_101_FPN_1x_caffe2.pkl".format(self._data_name))
-    if not os.path.exists(self._reference_file):
-        print('No reference file.')
-        assert False
-    else:
-        with open(self._reference_file, "rb") as f:
-            self.reference_image = pickle.load(f)
+    # self._reference_dir  = os.path.join(cfg.DATA_DIR, "coco_reference_image")
+    # self._reference_file = os.path.join(self._reference_dir, "coco_{}_e2e_mask_rcnn_R_101_FPN_1x_caffe2.pkl".format(self._data_name))
+    # if not os.path.exists(self._reference_file):
+    #     print('No reference file.')
+    #     assert False
+    # else:
+    #     with open(self._reference_file, "rb") as f:
+    #         self.reference_image = pickle.load(f)
 
     self.cat_data = {}
 
@@ -193,8 +193,8 @@ class coco(imdb):
     height = im_ann['height']
 
     # Get the useful information
-    reference  = self.reference_image[index]
-    save_seq = reference.keys()
+    # reference  = self.reference_image[index]
+    # save_seq = reference.keys()
 
     annIds = self._COCO.getAnnIds(imgIds=index, iscrowd=None)
     objs = self._COCO.loadAnns(annIds)
