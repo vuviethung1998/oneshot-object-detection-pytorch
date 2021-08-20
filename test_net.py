@@ -127,7 +127,7 @@ momentum = cfg.TRAIN.MOMENTUM
 weight_decay = cfg.TRAIN.WEIGHT_DECAY
 
 if __name__ == '__main__':
-
+  model_path  = '/home/aiotlab/emed_test/oneshot/oneshot-object-detection-pytorch'
   args = parse_args()
 
   print('Called with args:')
@@ -372,7 +372,10 @@ if __name__ == '__main__':
           o_query = cv2.resize(o_query, (h, h),interpolation=cv2.INTER_LINEAR)
           im2show = np.concatenate((im2show, o_query), axis=1)
 
-          cv2.imwrite('/content/data/test_img/%d_d.png'%(i), im2show)
+          output_path = model_path + '/logs/output/'
+          if not os.path.exists(output_path):
+            os.mkdir(output_path)
+          cv2.imwrite(output_path + '%d_d.png'%(i), im2show)
 
 
       with open(det_file, 'wb') as f:

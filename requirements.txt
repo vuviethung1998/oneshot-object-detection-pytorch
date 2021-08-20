@@ -11,3 +11,4 @@ pandas
 pillow==6.2.0
 torch==1.7.0
 torchvision==0.8.0
+numpy==1.17.3 

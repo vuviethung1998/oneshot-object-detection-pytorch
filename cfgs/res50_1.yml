@@ -15,5 +15,5 @@ TRAIN:
 TEST:
   HAS_RPN: True
 POOLING_MODE: align
-train_categories: [1]
-test_categories: [1]
+train_categories: [1] # chi train cac class co so du % 4 khac 1
+test_categories: [1] # chi test cac class co so du % 4 == 1

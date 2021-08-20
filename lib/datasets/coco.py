@@ -322,7 +322,8 @@ class coco(imdb):
 
     coco_dt = self._COCO.loadRes(res_file)
 
-    cocoEval = customCOCOeval(self._COCO, coco_dt, "bbox")
+    # cocoEval = customCOCOeval(self._COCO, coco_dt, "bbox")
+    cocoEval = customCOCOeval(self._COCO, coco_dt)
     cocoEval.params.imgIds = self._image_index
     cocoEval.evaluate()
     # print(cocoEval.ious)
@@ -516,11 +517,14 @@ class customCOCOeval(COCOeval):
             return stats
         if not self.eval:
             raise Exception('Please run accumulate() first')
-        iouType = self.params.iouType
-        if iouType == 'segm' or iouType == 'bbox':
-            summarize = _summarizeDets
-        elif iouType == 'keypoints':
-            summarize = _summarizeKps
+        # iouType = self.params.iouType
+        iouType = 'bbox' # set iouType to bbox 
+        
+        summarize = _summarizeDets
+        # if iouType == 'segm' or iouType == 'bbox':
+        #     summarize = _summarizeDets
+        # elif iouType == 'keypoints':
+        #     summarize = _summarizeKps
         self.stats = summarize()
 
     def __str__(self, cass_index=None):

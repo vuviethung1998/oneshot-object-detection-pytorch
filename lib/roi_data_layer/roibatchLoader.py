@@ -66,22 +66,31 @@ class roibatchLoader(data.Dataset):
 
             self.ratio_list_batch[left_idx:(right_idx+1)] = target_ratio
 
+    # self._cat_ids = [
+    #         1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 
+    #         14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 
+    #         24, 25, 27, 28, 31, 32, 33, 34, 35, 36, 
+    #         37, 38, 39, 40, 41, 42, 43, 44, 46, 47, 
+    #         48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 
+    #         58, 59, 60, 61, 62, 63, 64, 65, 67, 70, 
+    #         72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 
+    #         82, 84, 85, 86, 87, 88, 89, 90
+    #     ]
+    print('start __init__')
     self._cat_ids = [
-            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 
-            14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 
-            24, 25, 27, 28, 31, 32, 33, 34, 35, 36, 
-            37, 38, 39, 40, 41, 42, 43, 44, 46, 47, 
-            48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 
-            58, 59, 60, 61, 62, 63, 64, 65, 67, 70, 
-            72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 
-            82, 84, 85, 86, 87, 88, 89, 90
-        ]
+        x for x in range(1,self._num_classes + 10)
+    ]
+
     self._classes = {
             ind + 1: cat_id for ind, cat_id in enumerate(self._cat_ids)
         }
     self._classes_inv = {
             value: key for key, value in self._classes.items()
         }
+    print('__init__ - _cat_ids: {}'.format(self._cat_ids))
+    print('__init__ - _classes: {}'.format(self._classes))    
+    print('__init__ - _classes_inv: {}'.format(self._classes_inv))
+    print('end __init__')
     
     self.filter(seen)
     self.probability()
@@ -330,34 +339,49 @@ class roibatchLoader(data.Dataset):
     if seen==1:
       self.list = cfg.train_categories
       # Group number to class
-      if len(self.list)==1:
-        self.list = [self._classes[cat] for cat in range(1,81) if cat%4 != self.list[0]]
+      if len(self.list)==1: # replace 81 with classself._num_classes 
+        self.list = [self._classes[cat] for cat in range(1,self._num_classes) if cat%4 != self.list[0]]
 
     elif seen==2:
       self.list = cfg.test_categories
       # Group number to class
       if len(self.list)==1:
-        self.list = [self._classes[cat] for cat in range(1,81) if cat%4 == self.list[0]]
+        self.list = [self._classes[cat] for cat in range(1,self._num_classes) if cat%4 == self.list[0]]
     
     elif seen==3:
       self.list = cfg.train_categories + cfg.test_categories
       # Group number to class
       if len(self.list)==2:
-        self.list = [self._classes[cat] for cat in range(1,81)]
+        self.list = [self._classes[cat] for cat in range(1,self._num_classes)]
+    print('filter - list: {}'.format(self.list))
 
     self.list_ind = [self._classes_inv[x] for x in self.list]
+    print('filter - seen: {}'.format(seen))
+    print('filter - list_ind: {}'.format(self.list_ind))
   
   def probability(self):
     show_time = {}
-    for i in self.list_ind:
+    print('__init__ - _cat_ids: {}'.format(self._cat_ids))
+    print('__init__ - _classes: {}'.format(self._classes))    
+    print('__init__ - _classes_inv: {}'.format(self._classes_inv))
+    print('probability-list_ind {}'.format(self.list_ind))
+    for i in self.list_ind: # problem dang co show_time [i] = 0 
         show_time[i] = 0
     for roi in self._roidb:
         result = Counter(roi['gt_classes'])
+        print('probability-result: {}'.format(result))
         for t in result:
             if t in self.list_ind:
                 show_time[t] += result[t]
 
+    print('probability-show_time: {}'.format(show_time))
     for i in self.list_ind:
+        if show_time[i] == 0:
+            print('no counter at: {}'.format(i))
+            
+    for i in self.list_ind:
+        if show_time[i] == 0:
+            show_time[i] = 1 
         show_time[i] = 1/show_time[i]
 
     sum_prob = sum(show_time.values())
