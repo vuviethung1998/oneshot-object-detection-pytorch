@@ -196,7 +196,10 @@ class vg(imdb):
         return gt_roidb
 
     def _get_size(self, index):
-      return PIL.Image.open(self.image_path_from_index(index)).size
+        with PIL.Image.open(self.image_path_from_index(index)) as img_file:
+            size = img_file.size
+        # return PIL.Image.open(self.image_path_from_index(index)).size
+        return size 
 
     def _annotation_path(self, index):
         return os.path.join(self._data_path, 'xml', str(index) + '.xml')

@@ -82,7 +82,9 @@ class COCO:
         if not annotation_file == None: # neu ton tai annotation file
             print('loading annotations into memory...')
             tic = time.time()
-            dataset = json.load(open(annotation_file, 'r')) #  tao dataset
+            with open(annotation_file, 'r') as anFile:
+                dataset = json.load(anFile) #  tao dataset
+            # dataset = json.load(open(annotation_file, 'r')) #  tao dataset
 
             print('Done (t=%0.2fs)'%(time.time()- tic))
             self.dataset = dataset
@@ -302,7 +304,10 @@ class COCO:
 
         print('Loading and preparing results...     ')
         tic = time.time()
-        anns    = json.load(open(resFile))
+        # anns    = json.load(open(resFile))
+        with open(resFile, 'r') as rFile:
+            anns = json.load(rFile)
+
         assert type(anns) == list, 'results in not an array of objects'
         annsImgIds = [ann['image_id'] for ann in anns]
         assert set(annsImgIds) == (set(annsImgIds) & set(self.getImgIds())), \

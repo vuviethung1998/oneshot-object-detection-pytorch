@@ -197,7 +197,7 @@ if __name__ == '__main__':
     raise Exception('There is no input directory for loading network from ' + input_dir)
 
   load_name = os.path.join(input_dir,
-    'faster_rcnn_{}_{}_{}.pth'.format(args.checksession, args.checkepoch, args.checkpoint))
+    'faster_rcnn_{}_{}_{}_{}.pth'.format(args.batch_size, args.checksession, args.checkepoch, args.checkpoint))
   print("load checkpoint %s" % (load_name))
   checkpoint = torch.load(load_name)
   fasterRCNN.load_state_dict(checkpoint['model'])

@@ -38,34 +38,34 @@ class coco(imdb):
     # load COCO API, classes, class <-> id mappings
     self._COCO = COCO(self._get_ann_file())
     cats = self._COCO.loadCats(self._COCO.getCatIds())
-    print('ids: {}'.format(self._COCO.getCatIds())) # lây tất cả các category_id
-    print('cats: {}'.format(cats)) # lây tất cả các category
+    # print('ids: {}'.format(self._COCO.getCatIds())) # lây tất cả các category_id
+    # print('cats: {}'.format(cats)) # lây tất cả các category
     # class name
     self._classes = tuple(['__background__'] + [c['name'] for c in cats]) # Thêm class background vào danh sách các tên class 
-    print('classes: {}'.format(self._classes))
+    # print('classes: {}'.format(self._classes))
     # class name to ind    (0~80) 0= __background__
     self._class_to_ind = dict(list(zip(self.classes, list(range(self.num_classes)))))
-    print('_class_to_ind: {}'.format(self._class_to_ind))
+    # print('_class_to_ind: {}'.format(self._class_to_ind))
     # class name to cat_id (1~90) 1= person
     self._class_to_coco_cat_id = dict(list(zip([c['name'] for c in cats],
                                                self._COCO.getCatIds())))
-    print('_class_to_coco_cat_id: {}'.format(self._class_to_coco_cat_id))                                               
+    # print('_class_to_coco_cat_id: {}'.format(self._class_to_coco_cat_id))                                               
     # Lookup table to map from COCO category ids to our internal class
     # indices
     # 1~90 : 1~80
     self.coco_cat_id_to_class_ind = dict([(self._class_to_coco_cat_id[cls],
                                       self._class_to_ind[cls])
                                      for cls in self._classes[1:]])
-    print('coco_cat_id_to_class_ind: {}'.format(self.coco_cat_id_to_class_ind)) 
+    # print('coco_cat_id_to_class_ind: {}'.format(self.coco_cat_id_to_class_ind)) 
     # 1~80 : 1~90
     self.coco_class_ind_to_cat_id = dict([(self._class_to_ind[cls],
                                       self._class_to_coco_cat_id[cls])
                                      for cls in self._classes[1:]])
 
     self._image_index = self._load_image_set_index()
-    print('_image_index: {}'.format(self._image_index)) 
+    # print('_image_index: {}'.format(self._image_index)) 
 
-    print('catToImgs: {}'.format(self._COCO.catToImgs))
+    # print('catToImgs: {}'.format(self._COCO.catToImgs))
 
     # Default to roidb handler
     self.set_proposal_method('gt')

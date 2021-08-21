@@ -21,8 +21,13 @@ def prepare_roidb(imdb):
 
   roidb = imdb.roidb
   if not (imdb.name.startswith('coco')):
-    sizes = [PIL.Image.open(imdb.image_path_at(i)).size
-         for i in range(imdb.num_images)]
+    sizes = []
+    for i in range(imdb.num_images):
+      with PIL.Image.open(imdb.image_path_at(i)) as img_file:
+        sizes[i] = img_file.size
+
+    # sizes = [PIL.Image.open(imdb.image_path_at(i)).size
+    #      for i in range(imdb.num_images)]
          
   for i in range(len(imdb.image_index)):
     roidb[i]['img_id'] = imdb.image_id_at(i)

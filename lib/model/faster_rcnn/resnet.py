@@ -20,7 +20,7 @@ __all__ = ['ResNet', 'resnet18', 'resnet34', 'resnet50', 'resnet101',
 model_urls = {
   'resnet18': 'https://s3.amazonaws.com/pytorch/models/resnet18-5c106cde.pth',
   'resnet34': 'https://s3.amazonaws.com/pytorch/models/resnet34-333f7ec4.pth',
-  'resnet50': 'https://s3.amazonaws.com/pytorch/models/resnet50-19c8e357.pth',
+  'resnet50': '/home/aiotlab/emed_test/VinUni/pills/model/pills_detection/utils/resnet50_backbone_centernet.pth',
   'resnet101': 'https://s3.amazonaws.com/pytorch/models/resnet101-5d3b4d8f.pth',
   'resnet152': 'https://s3.amazonaws.com/pytorch/models/resnet152-b121ed2d.pth',
 }
@@ -192,7 +192,8 @@ def resnet50(pretrained=False):
   """
   model = ResNet(Bottleneck, [3, 4, 6, 3])
   if pretrained:
-    model.load_state_dict(model_zoo.load_url(model_urls['resnet50']))
+    model.load_state_dict(torch.load(model_urls['resnet50']))
+    # model.load_state_dict(model_zoo.load_url(model_urls['resnet50']))
   return model
 
 

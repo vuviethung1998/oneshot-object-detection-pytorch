@@ -76,7 +76,7 @@ class roibatchLoader(data.Dataset):
     #         72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 
     #         82, 84, 85, 86, 87, 88, 89, 90
     #     ]
-    print('start __init__')
+    # print('start __init__')
     self._cat_ids = [
         x for x in range(1,self._num_classes + 10)
     ]
@@ -87,10 +87,10 @@ class roibatchLoader(data.Dataset):
     self._classes_inv = {
             value: key for key, value in self._classes.items()
         }
-    print('__init__ - _cat_ids: {}'.format(self._cat_ids))
-    print('__init__ - _classes: {}'.format(self._classes))    
-    print('__init__ - _classes_inv: {}'.format(self._classes_inv))
-    print('end __init__')
+    # print('__init__ - _cat_ids: {}'.format(self._cat_ids))
+    # print('__init__ - _classes: {}'.format(self._classes))    
+    # print('__init__ - _classes_inv: {}'.format(self._classes_inv))
+    # print('end __init__')
     
     self.filter(seen)
     self.probability()
@@ -353,28 +353,28 @@ class roibatchLoader(data.Dataset):
       # Group number to class
       if len(self.list)==2:
         self.list = [self._classes[cat] for cat in range(1,self._num_classes)]
-    print('filter - list: {}'.format(self.list))
+    # print('filter - list: {}'.format(self.list))
 
     self.list_ind = [self._classes_inv[x] for x in self.list]
-    print('filter - seen: {}'.format(seen))
-    print('filter - list_ind: {}'.format(self.list_ind))
+    # print('filter - seen: {}'.format(seen))
+    # print('filter - list_ind: {}'.format(self.list_ind))
   
   def probability(self):
     show_time = {}
-    print('__init__ - _cat_ids: {}'.format(self._cat_ids))
-    print('__init__ - _classes: {}'.format(self._classes))    
-    print('__init__ - _classes_inv: {}'.format(self._classes_inv))
-    print('probability-list_ind {}'.format(self.list_ind))
+    # print('__init__ - _cat_ids: {}'.format(self._cat_ids))
+    # print('__init__ - _classes: {}'.format(self._classes))    
+    # print('__init__ - _classes_inv: {}'.format(self._classes_inv))
+    # print('probability-list_ind {}'.format(self.list_ind))
     for i in self.list_ind: # problem dang co show_time [i] = 0 
         show_time[i] = 0
     for roi in self._roidb:
         result = Counter(roi['gt_classes'])
-        print('probability-result: {}'.format(result))
+        # print('probability-result: {}'.format(result))
         for t in result:
             if t in self.list_ind:
                 show_time[t] += result[t]
 
-    print('probability-show_time: {}'.format(show_time))
+    # print('probability-show_time: {}'.format(show_time))
     for i in self.list_ind:
         if show_time[i] == 0:
             print('no counter at: {}'.format(i))
