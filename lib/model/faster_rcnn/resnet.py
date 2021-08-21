@@ -245,6 +245,7 @@ class resnet(_fasterRCNN):
       state_dict_v2 = copy.deepcopy(state_dict)
 
       for key in state_dict:
+        print('key: {}'.format(key))
         pre, post = key.split('module.')
         state_dict_v2[post] = state_dict_v2.pop(key)
 
