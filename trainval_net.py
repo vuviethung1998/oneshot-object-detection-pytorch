@@ -49,7 +49,7 @@ def parse_args():
                       default=1, type=int)
   parser.add_argument('--epochs', dest='max_epochs',
                       help='number of epochs to train',
-                      default=20, type=int)
+                      default=50, type=int)
   parser.add_argument('--disp_interval', dest='disp_interval',
                       help='number of iterations to display',
                       default=10, type=int)
@@ -93,12 +93,12 @@ def parse_args():
                       default=0.01, type=float)
   parser.add_argument('--lr_decay_step', dest='lr_decay_step',
                       help='step to do learning rate decay, unit is epoch',
-                      default=4, type=int)
+                      default=9, type=int)
   parser.add_argument('--lr_decay_gamma', dest='lr_decay_gamma',
                       help='learning rate decay ratio',
                       default=0.1, type=float)
 
-# set training session
+  # set training session
   parser.add_argument('--s', dest='session',
                       help='training session',
                       default=1, type=int)
@@ -293,7 +293,10 @@ if __name__ == '__main__':
     loss_temp = 0
     start = time.time()
 
-    if epoch % (args.lr_decay_step + 1) == 0:
+    # with first 5 epochs we keep the initial learning rate, after that we scale by number of workers
+    if epoch == 17:
+        lr = lr * args.num_workers
+    elif epoch % (args.lr_decay_step + 1) == 0:
         adjust_learning_rate(optimizer, args.lr_decay_gamma)
         lr *= args.lr_decay_gamma
 

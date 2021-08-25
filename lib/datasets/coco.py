@@ -409,19 +409,19 @@ class coco(imdb):
       self.list = cfg.train_categories
       # Group number to class
       if len(self.list)==1:
-        self.list = [self.coco_class_ind_to_cat_id[cat] for cat in range(1,81) if cat%4 != self.list[0]]
+        self.list = [self.coco_class_ind_to_cat_id[cat] for cat in range(1,self.num_classes+1) if cat%4 != self.list[0]]
 
     elif seen==2:
       self.list = cfg.test_categories
       # Group number to class
       if len(self.list)==1:
-        self.list = [self.coco_class_ind_to_cat_id[cat] for cat in range(1,81) if cat%4 == self.list[0]]
+        self.list = [self.coco_class_ind_to_cat_id[cat] for cat in range(1,self.num_classes+1) if cat%4 == self.list[0]]
     
     elif seen==3:
       self.list = cfg.train_categories + cfg.test_categories
       # Group number to class
       if len(self.list)==2:
-        self.list = [self.coco_class_ind_to_cat_id[cat] for cat in range(1,81)]
+        self.list = [self.coco_class_ind_to_cat_id[cat] for cat in range(1,self.num_classes+1)]
 
     # Transfer categories id to class indices
     self.inverse_list = [self.coco_cat_id_to_class_ind[i] for i in self.list ]

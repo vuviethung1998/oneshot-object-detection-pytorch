@@ -101,6 +101,9 @@ def parse_args():
   parser.add_argument('--parallel_type', dest='parallel_type',
                       help='which part of model to parallel, 0: all, 1: model before roi pooling',
                       default=0, type=int)
+  parser.add_argument('--bs', dest='batch_size',
+                      help='batch_size',
+                      default=128, type=int)
   parser.add_argument('--s', dest='checksession',
                       help='checksession to load model',
                       default=1, type=int)
@@ -345,7 +348,7 @@ if __name__ == '__main__':
             image_scores = all_boxes[catgory][index][:,-1]
             if len(image_scores) > max_per_image:
                 image_thresh = np.sort(image_scores)[-max_per_image]
-                keep = np.where(all_boxes[catgory][index][:,-1] >= image_thresh)[0]
+                keep = np.where(all_boxes[catgory][index][:,-1] >= image_thresh)[0] # thay doi image_thresh de chinh gioi han keep
                 all_boxes[catgory][index] = all_boxes[catgory][index][keep, :]
           except:
             pass
@@ -359,6 +362,8 @@ if __name__ == '__main__':
 
         # save test image
         if vis and i%1==0:
+          print('----------------------------------')
+          print('save test image')
           im2show = cv2.imread(dataset_vu._roidb[dataset_vu.ratio_index[i]]['image'])
           im2show = vis_detections(im2show, 'shot', cls_dets.cpu().numpy(), 0.8)
 
@@ -373,6 +378,7 @@ if __name__ == '__main__':
           im2show = np.concatenate((im2show, o_query), axis=1)
 
           output_path = model_path + '/logs/output/'
+          print(output_path)
           if not os.path.exists(output_path):
             os.mkdir(output_path)
           cv2.imwrite(output_path + '%d_d.png'%(i), im2show)
@@ -381,7 +387,6 @@ if __name__ == '__main__':
       with open(det_file, 'wb') as f:
           pickle.dump(all_boxes, f, pickle.HIGHEST_PROTOCOL)
 
-    print('Evaluating detections') # vao day (8)
     imdb_vu.evaluate_detections(all_boxes, output_dir_vu)
 
     end = time.time()

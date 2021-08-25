@@ -20,7 +20,7 @@ __all__ = ['ResNet', 'resnet18', 'resnet34', 'resnet50', 'resnet101',
 model_urls = {
   'resnet18': 'https://s3.amazonaws.com/pytorch/models/resnet18-5c106cde.pth',
   'resnet34': 'https://s3.amazonaws.com/pytorch/models/resnet34-333f7ec4.pth',
-  'resnet50': '/home/aiotlab/emed_test/VinUni/pills/model/pills_detection/utils/resnet50_backbone_centernet.pth',
+  'resnet50': 'https://s3.amazonaws.com/pytorch/models/resnet50-19c8e357.pth',
   'resnet101': 'https://s3.amazonaws.com/pytorch/models/resnet101-5d3b4d8f.pth',
   'resnet152': 'https://s3.amazonaws.com/pytorch/models/resnet152-b121ed2d.pth',
 }
@@ -192,8 +192,10 @@ def resnet50(pretrained=False):
   """
   model = ResNet(Bottleneck, [3, 4, 6, 3])
   if pretrained:
-    model.load_state_dict(torch.load(model_urls['resnet50']))
-    # model.load_state_dict(model_zoo.load_url(model_urls['resnet50']))
+    print('load from yolo checkpoint')
+    # model.load_state_dict(torch.load(model_urls['resnet50']))
+    # model.load_state_dict(torch.load("./resnet50_backbone_centernet.pth")) /home/aiotlab/emed_test/VinUni/pills/model/pills_detection/utils/resnet50_backbone_centernet.pth
+    model.load_state_dict(model_zoo.load_url(model_urls['resnet50']))
   return model
 
 
@@ -249,6 +251,15 @@ class resnet(_fasterRCNN):
         state_dict_v2[post] = state_dict_v2.pop(key)
 
       resnet.load_state_dict(state_dict_v2)
+
+      #freeze layer1 layer2 layer3 
+      for name, param in resnet.named_parameters():
+        if param.requires_grad and not ('layer4' in name or 'fc' in name ):
+          param.requires_grad = False
+      # print('----------------')
+      # for name, param in resnet.named_parameters():
+      #   if param.requires_grad:
+      #     print(name)
 
     # Build resnet.
     self.RCNN_base = nn.Sequential(resnet.conv1, resnet.bn1,resnet.relu,

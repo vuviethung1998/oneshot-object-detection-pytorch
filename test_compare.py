@@ -182,9 +182,6 @@ if __name__ == '__main__':
   # imdb_vs.competition_mode(on=True)
   imdb_vu.competition_mode(on=True)
 
-
-
-
   input_dir = args.load_dir + "/" + args.net + "/" + args.dataset
   if not os.path.exists(input_dir):
     raise Exception('There is no input directory for loading network from ' + input_dir)
