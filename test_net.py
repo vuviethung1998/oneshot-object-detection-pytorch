@@ -365,7 +365,7 @@ if __name__ == '__main__':
           print('----------------------------------')
           print('save test image')
           im2show = cv2.imread(dataset_vu._roidb[dataset_vu.ratio_index[i]]['image'])
-          im2show = vis_detections(im2show, 'shot', cls_dets.cpu().numpy(), 0.8)
+          im2show = vis_detections(im2show, 'shot', cls_dets.cpu().numpy(), 0.7)
 
           o_query = data[1][0].permute(1, 2,0).contiguous().cpu().numpy()
           o_query *= [0.229, 0.224, 0.225]

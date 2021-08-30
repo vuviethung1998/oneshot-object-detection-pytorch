@@ -90,13 +90,13 @@ def parse_args():
                       default="sgd", type=str)
   parser.add_argument('--lr', dest='lr',
                       help='starting learning rate',
-                      default=0.01, type=float)
+                      default=0.001, type=float)
   parser.add_argument('--lr_decay_step', dest='lr_decay_step',
                       help='step to do learning rate decay, unit is epoch',
                       default=9, type=int)
   parser.add_argument('--lr_decay_gamma', dest='lr_decay_gamma',
                       help='learning rate decay ratio',
-                      default=0.1, type=float)
+                      default=0.5, type=float)
 
   # set training session
   parser.add_argument('--s', dest='session',
@@ -294,7 +294,7 @@ if __name__ == '__main__':
     start = time.time()
 
     # with first 5 epochs we keep the initial learning rate, after that we scale by number of workers
-    if epoch == 17:
+    if epoch == 19:
         lr = lr * args.num_workers
     elif epoch % (args.lr_decay_step + 1) == 0:
         adjust_learning_rate(optimizer, args.lr_decay_gamma)

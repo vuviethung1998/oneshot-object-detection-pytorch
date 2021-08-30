@@ -52,7 +52,7 @@ def vis_detections(im, class_name, dets, thresh=0.5):
     for i in range(np.minimum(10, dets.shape[0])):
         bbox = tuple(int(np.round(x)) for x in dets[i, :4])
         score = dets[i, -1]
-        if score > 0.8:
+        if score > thresh: # change threshold
             cv2.rectangle(im, bbox[0:2], bbox[2:4], (0, 110, 255), 5)
 
             text = '%.3f' % (score)
