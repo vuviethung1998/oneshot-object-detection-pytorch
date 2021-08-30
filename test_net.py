@@ -133,6 +133,9 @@ if __name__ == '__main__':
   model_path  = '/home/aiotlab/emed_test/oneshot/oneshot-object-detection-pytorch'
   args = parse_args()
 
+  print('Called with args:')
+  print(args)
+
   if torch.cuda.is_available() and not args.cuda:
     print("WARNING: You have a CUDA device, so you should probably run with --cuda")
 
@@ -205,6 +208,7 @@ if __name__ == '__main__':
     cfg.POOLING_MODE = checkpoint['pooling_mode']
 
   # initilize the tensor holder here.
+  print('load model successfully!') # vao day (7)
   im_data = torch.FloatTensor(1)
   query   = torch.FloatTensor(1)
   im_info = torch.FloatTensor(1)
@@ -262,27 +266,20 @@ if __name__ == '__main__':
       det_file = os.path.join(output_dir_vu, 'sess%d_g%d_seen%d_%d.pkl'%(args.checksession, args.group, args.seen, avg))
     else:
       det_file = os.path.join(output_dir_vu, 'sess%d_seen%d_%d.pkl'%(args.checksession, args.seen, avg))
+    print(det_file)
 
     if os.path.exists(det_file):
-    #   with open(det_file, 'rb') as fid:
-    #     all_boxes = pickle.load(fid)
-    # else:
+      with open(det_file, 'rb') as fid:
+        all_boxes = pickle.load(fid)
+    else:
       for i,index in enumerate(ratio_index_vu[0]):
         data = next(data_iter_vu)
         with torch.no_grad():
           im_data.resize_(data[0].size()).copy_(data[0])
           query.resize_(data[1].size()).copy_(data[1])
-          # im_info.resize_(data[2].size()).copy_(data[2])
-          im_info.resize_(1).zero_()
+          im_info.resize_(data[2].size()).copy_(data[2])
           gt_boxes.resize_(data[3].size()).copy_(data[3])
-          # catgory.resize_(data[4].size()).copy_(data[4])
-          catgory.resize_(1).zero_()
-
-        print('im_data {}'.format(im_data) )
-        print('query {}'.format(query) )
-        print('im_info {}'.format(im_info) )
-        print('gt_boxes {}'.format(gt_boxes) )
-        print('catgory {}'.format(catgory) )
+          catgory.resize_(data[4].size()).copy_(data[4])
 
         # Run Testing
         det_tic = time.time()
@@ -290,7 +287,7 @@ if __name__ == '__main__':
         rpn_loss_cls, rpn_loss_box, \
         RCNN_loss_cls, _, RCNN_loss_bbox, \
         rois_label, weight = fasterRCNN(im_data, query, im_info, gt_boxes, catgory)
-        # fasterRCNN(im_data, query, im_info, gt_boxes, catgory)
+
         scores = cls_prob.data
         boxes = rois.data[:, :, 1:5]
 
