@@ -269,14 +269,31 @@ if __name__ == '__main__':
     print(det_file)
 
     if os.path.exists(det_file):
-      with open(det_file, 'rb') as fid:
-        all_boxes = pickle.load(fid)
-    else:
+    #   with open(det_file, 'rb') as fid:
+    #     all_boxes = pickle.load(fid)
+    # else:
       for i,index in enumerate(ratio_index_vu[0]):
         data = next(data_iter_vu)
         with torch.no_grad():
           im_data.resize_(data[0].size()).copy_(data[0])
+          im_data_np = im_data.squeeze().permute(1, 2,0).cpu().detach().numpy()
+          print('im_data shape: {}'.format(im_data_np.shape))
+          im_data_np *= [0.229, 0.224, 0.225]
+          im_data_np += [0.485, 0.456, 0.406]
+          im_data_np *= 255
+          im_data_np = im_data_np[:,:,::-1]
+          cv2.imwrite('./' + 'test1.png', im_data_np)
+
           query.resize_(data[1].size()).copy_(data[1])
+          query_np = query.squeeze().permute(1, 2,0).cpu().detach().numpy()
+          print('query shape: {}'.format(query_np.shape))
+          query_np *= [0.229, 0.224, 0.225]
+          query_np += [0.485, 0.456, 0.406]
+          query_np *= 255
+          query_np = query_np[:,:,::-1]
+          cv2.imwrite('./' + 'test2.png', query_np)
+
+
           im_info.resize_(data[2].size()).copy_(data[2])
           gt_boxes.resize_(data[3].size()).copy_(data[3])
           catgory.resize_(data[4].size()).copy_(data[4])
