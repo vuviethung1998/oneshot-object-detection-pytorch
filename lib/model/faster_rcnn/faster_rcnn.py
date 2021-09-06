@@ -158,8 +158,10 @@ class _fasterRCNN(nn.Module):
         self.triplet_loss = torch.nn.MarginRankingLoss(margin = cfg.TRAIN.MARGIN)
 
     def forward(self, im_data, query, im_info, gt_boxes, num_boxes):
+        print(im_data.size(0))
         batch_size = im_data.size(0)
-
+        print('batch_size shape: {}'.format(batch_size))
+    
         im_info = im_info.data
         gt_boxes = gt_boxes.data
         num_boxes = num_boxes.data

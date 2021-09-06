@@ -276,6 +276,7 @@ if __name__ == '__main__':
         data = next(data_iter_vu)
         with torch.no_grad():
           im_data.resize_(data[0].size()).copy_(data[0])
+          print(type(im_data))
           # print('im_data: {}'.format(im_data))
           print('im_data shape: {}'.format(im_data.shape))
           # im_data_np = im_data.squeeze().permute(1, 2,0).cpu().detach().numpy()

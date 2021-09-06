@@ -32,6 +32,7 @@ from model.faster_rcnn.resnet import resnet
 from model.utils.blob import im_list_to_blob
 
 import pdb
+import gc
 
 def load_image( infilename ):
     img = Image.open( infilename )
@@ -264,8 +265,11 @@ if __name__=="__main__":
     
     with torch.no_grad():
         im_data, im_scale = _get_image_blob(base_img,mode="base")
+        # im_data = im_data.transpose(0, 3, 2, 1)
         im_data = torch.from_numpy(im_data)
         im_data = im_data.permute(0, 3, 2, 1).contiguous().cpu().numpy()
+        im_data = torch.from_numpy(im_data)
+        print(type(im_data))
         # print('im_data: {}'.format(im_data))
         print('im_data shape: {}'.format(im_data.shape))
 
