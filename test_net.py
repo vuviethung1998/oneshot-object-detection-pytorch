@@ -276,27 +276,35 @@ if __name__ == '__main__':
         data = next(data_iter_vu)
         with torch.no_grad():
           im_data.resize_(data[0].size()).copy_(data[0])
-          im_data_np = im_data.squeeze().permute(1, 2,0).cpu().detach().numpy()
-          print('im_data shape: {}'.format(im_data_np.shape))
-          im_data_np *= [0.229, 0.224, 0.225]
-          im_data_np += [0.485, 0.456, 0.406]
-          im_data_np *= 255
-          im_data_np = im_data_np[:,:,::-1]
-          cv2.imwrite('./' + 'test1.png', im_data_np)
+          # print('im_data: {}'.format(im_data))
+          print('im_data shape: {}'.format(im_data.shape))
+          # im_data_np = im_data.squeeze().permute(1, 2,0).cpu().detach().numpy()
+          # print('im_data shape: {}'.format(im_data_np.shape))
+          # im_data_np *= [0.229, 0.224, 0.225]
+          # im_data_np += [0.485, 0.456, 0.406]
+          # im_data_np *= 255
+          # im_data_np = im_data_np[:,:,::-1]
+          # cv2.imwrite('./' + 'test1.png', im_data_np)
 
           query.resize_(data[1].size()).copy_(data[1])
-          query_np = query.squeeze().permute(1, 2,0).cpu().detach().numpy()
-          print('query shape: {}'.format(query_np.shape))
-          query_np *= [0.229, 0.224, 0.225]
-          query_np += [0.485, 0.456, 0.406]
-          query_np *= 255
-          query_np = query_np[:,:,::-1]
-          cv2.imwrite('./' + 'test2.png', query_np)
+          print('query shape: {}'.format(query.shape))
+          # query_np = query.squeeze().permute(1, 2,0).cpu().detach().numpy()
+          # query_np *= [0.229, 0.224, 0.225]
+          # query_np += [0.485, 0.456, 0.406]
+          # query_np *= 255
+          # query_np = query_np[:,:,::-1]
+          # cv2.imwrite('./' + 'test2.png', query_np)
 
 
           im_info.resize_(data[2].size()).copy_(data[2])
-          gt_boxes.resize_(data[3].size()).copy_(data[3])
-          catgory.resize_(data[4].size()).copy_(data[4])
+          # gt_boxes.resize_(data[3].size()).copy_(data[3])
+          gt_boxes.resize_(data[3].size())
+          # print('gt_boxes shape: {}'.format(gt_boxes.shape))
+          # print('gt_boxes: {}'.format(gt_boxes))
+          # catgory.resize_(data[4].size()).copy_(data[4])
+          catgory.resize_(data[4].size())
+          # print('catgory shape: {}'.format(catgory.shape))
+
 
         # Run Testing
         det_tic = time.time()
@@ -357,18 +365,20 @@ if __name__ == '__main__':
           # NMS
           keep = nms(cls_boxes[order, :], cls_scores[order], cfg.TEST.NMS)
           cls_dets = cls_dets[keep.view(-1).long()]
-          all_boxes[catgory][index] = cls_dets.cpu().numpy()
+        #test
+          # all_boxes[catgory][index] = cls_dets.cpu().numpy()
 
         # Limit to max_per_image detections *over all classes*
-        if max_per_image > 0:
-          try:
-            image_scores = all_boxes[catgory][index][:,-1]
-            if len(image_scores) > max_per_image:
-                image_thresh = np.sort(image_scores)[-max_per_image]
-                keep = np.where(all_boxes[catgory][index][:,-1] >= image_thresh)[0] # thay doi image_thresh de chinh gioi han keep
-                all_boxes[catgory][index] = all_boxes[catgory][index][keep, :]
-          except:
-            pass
+        #test
+        # if max_per_image > 0:
+        #   try:
+        #     image_scores = all_boxes[catgory][index][:,-1]
+        #     if len(image_scores) > max_per_image:
+        #         image_thresh = np.sort(image_scores)[-max_per_image]
+        #         keep = np.where(all_boxes[catgory][index][:,-1] >= image_thresh)[0] # thay doi image_thresh de chinh gioi han keep
+        #         all_boxes[catgory][index] = all_boxes[catgory][index][keep, :]
+        #   except:
+        #     pass
 
         misc_toc = time.time()
         nms_time = misc_toc - misc_tic
