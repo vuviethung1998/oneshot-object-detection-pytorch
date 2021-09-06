@@ -266,7 +266,7 @@ if __name__=="__main__":
     with torch.no_grad():
         im_data, im_scale = _get_image_blob(base_img,mode="base")
         im_data = im_data.transpose(0, 3, 2, 1)
-        im_data = torch.from_numpy(im_data)
+        im_data = torch.from_numpy(im_data).cuda()
         # im_data = im_data.permute(0, 3, 2, 1).contiguous().cpu().numpy()
         # im_data = torch.from_numpy(im_data)
         print(type(im_data))
@@ -274,8 +274,8 @@ if __name__=="__main__":
         print('im_data shape: {}'.format(im_data.shape))
 
         query, query_scale = _get_image_blob(query_img,mode="query")
-        query = torch.from_numpy(query)
-        query = query.permute(0, 3, 2, 1).contiguous().cpu().numpy()
+        query = query.transpose(0, 3, 2, 1)
+        query = torch.from_numpy(query).cuda()
         print('query shape: {}'.format(query.shape))
         
         im_info =  np.array([[im_data.shape[1], im_data.shape[2], im_scale[0]]],dtype=np.float32)
@@ -315,7 +315,7 @@ if __name__=="__main__":
 
 
     # Resize to original ratio
-    pred_boxes /= data[2][0][2].item()
+    pred_boxes /= im_info[0][2].item()
 
     # Remove batch_size dimension
     scores = scores.squeeze()
@@ -346,18 +346,19 @@ if __name__=="__main__":
     sys.stdout.write('im_detect: {:.3f}s {:.3f}s   \r' \
         .format(detect_time, nms_time))
     sys.stdout.flush()
+    if inds.numel() > 0:
+        print('----------------------------------')
+        print('Visualize image')
+        im2show = cv2.imread(base_img_file)
+        im2show = vis_detections(im2show, 'shot', cls_dets.cpu().numpy(), 0.7)
 
-    print('----------------------------------')
-    print('Visualize image')
-    im2show = cv2.imread(base_img)
-    im2show = vis_detections(im2show, 'shot', cls_dets.cpu().numpy(), 0.7)
+        o_query = cv2.imread(query_img_file)
 
-    o_query = cv2.imread(query_img)
+        (h,w,c) = im2show.shape
+        o_query = cv2.resize(o_query, (h, h),interpolation=cv2.INTER_LINEAR)
+        im2show = np.concatenate((im2show, o_query), axis=1)
 
-    (h,w,c) = im2show.shape
-    o_query = cv2.resize(o_query, (h, h),interpolation=cv2.INTER_LINEAR)
-    im2show = np.concatenate((im2show, o_query), axis=1)
-
-    output_path = './'
-    cv2.imwrite(output_path + 'predict.png', im2show)
-
+        output_path = './'
+        cv2.imwrite(output_path + 'predict.png', im2show)
+    else:
+        print("Khong tra ve detection")
