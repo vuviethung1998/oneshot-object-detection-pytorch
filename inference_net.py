@@ -265,10 +265,10 @@ if __name__=="__main__":
     
     with torch.no_grad():
         im_data, im_scale = _get_image_blob(base_img,mode="base")
-        # im_data = im_data.transpose(0, 3, 2, 1)
+        im_data = im_data.transpose(0, 3, 2, 1)
         im_data = torch.from_numpy(im_data)
-        im_data = im_data.permute(0, 3, 2, 1).contiguous().cpu().numpy()
-        im_data = torch.from_numpy(im_data)
+        # im_data = im_data.permute(0, 3, 2, 1).contiguous().cpu().numpy()
+        # im_data = torch.from_numpy(im_data)
         print(type(im_data))
         # print('im_data: {}'.format(im_data))
         print('im_data shape: {}'.format(im_data.shape))
