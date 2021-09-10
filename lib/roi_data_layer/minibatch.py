@@ -13,7 +13,8 @@ from __future__ import print_function
 import numpy as np
 import cv2
 import numpy.random as npr
-from scipy.misc import imread
+# from scipy.misc import imread
+from imageio import imread
 from model.utils.config import cfg
 from model.utils.blob import prep_im_for_blob, im_list_to_blob
 import pdb
@@ -65,6 +66,7 @@ def _get_image_blob(roidb, scale_inds):
   for i in range(num_images):
     #im = cv2.imread(roidb[i]['image'])
     im = imread(roidb[i]['image'])
+    print('im: {}'.format(type(im)))
 
     if len(im.shape) == 2:
       im = im[:,:,np.newaxis]
@@ -85,3 +87,4 @@ def _get_image_blob(roidb, scale_inds):
   blob = im_list_to_blob(processed_ims)
 
   return blob, im_scales
+

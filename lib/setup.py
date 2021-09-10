@@ -8,7 +8,7 @@ import numpy as np
 import torch
 from setuptools import find_packages
 from setuptools import setup, Extension
-from torch.utils.cpp_extension import CUDA_HOME
+from torch.utils.cpp_extension import CUDA_HOME 
 from torch.utils.cpp_extension import CppExtension
 from torch.utils.cpp_extension import CUDAExtension
 
@@ -66,7 +66,7 @@ def get_extensions():
         extra_compile_args={
             'cxx': [],
             'gcc': ['-Wno-cpp', '-Wno-unused-function', '-std=c99']},
-    ),
+        ),
     ]
 
     return ext_modules

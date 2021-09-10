@@ -276,25 +276,32 @@ if __name__ == '__main__':
         data = next(data_iter_vu)
         with torch.no_grad():
           im_data.resize_(data[0].size()).copy_(data[0])
-          print(type(im_data))
-          # print('im_data: {}'.format(im_data))
-          print('im_data shape: {}'.format(im_data.shape))
-          # im_data_np = im_data.squeeze().permute(1, 2,0).cpu().detach().numpy()
-          # print('im_data shape: {}'.format(im_data_np.shape))
-          # im_data_np *= [0.229, 0.224, 0.225]
-          # im_data_np += [0.485, 0.456, 0.406]
-          # im_data_np *= 255
-          # im_data_np = im_data_np[:,:,::-1]
-          # cv2.imwrite('./' + 'test1.png', im_data_np)
+          # print(type(im_data))
+          # print('im_data: {}'.format(im_data[0]))
+          # print('im_data shape: {}'.format(im_data.shape))
+          
 
+          im_data_np = im_data.squeeze().permute(1, 2,0).cpu().detach().numpy()
+          # print('im_data shape: {}'.format(im_data_np.shape))
+          im_data_np *= [0.229, 0.224, 0.225]
+          im_data_np += [0.485, 0.456, 0.406]
+          im_data_np *= 255
+          im_data_np = im_data_np[:,:,::-1]
+          cv2.imwrite('./' + 'test1.png', im_data_np)
+          with open('./test1_np.txt', 'w') as f:
+            for row in im_data_np:
+              np.savetxt(f, row)
+
+          
           query.resize_(data[1].size()).copy_(data[1])
-          print('query shape: {}'.format(query.shape))
-          # query_np = query.squeeze().permute(1, 2,0).cpu().detach().numpy()
-          # query_np *= [0.229, 0.224, 0.225]
-          # query_np += [0.485, 0.456, 0.406]
-          # query_np *= 255
-          # query_np = query_np[:,:,::-1]
-          # cv2.imwrite('./' + 'test2.png', query_np)
+          # print('query: {}'.format(query.flatten()))          
+          # print('query shape: {}'.format(query.shape))
+          query_np = query.squeeze().permute(1, 2,0).cpu().detach().numpy()
+          query_np *= [0.229, 0.224, 0.225]
+          query_np += [0.485, 0.456, 0.406]
+          query_np *= 255
+          query_np = query_np[:,:,::-1]
+          cv2.imwrite('./' + 'test2.png', query_np)
 
 
           im_info.resize_(data[2].size()).copy_(data[2])
